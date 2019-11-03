@@ -43,7 +43,7 @@ public abstract class ProcessorImpl<T extends BaseEntity<?>> implements IProcess
 		Instant start = Instant.now();
 		Process p = new Process();
 		try {
-			p.setState(States.CARGANDO.name());
+			p.setState(States.LOADING.name());
 			p.setStartDate(Date.from(start));
 			p = processRepository.save(p);
 			final Long identifier = p.getId();
@@ -53,8 +53,9 @@ public abstract class ProcessorImpl<T extends BaseEntity<?>> implements IProcess
 						.map(entity -> this.complete(entity, identifier))
 				)
 			);
-			p.setState(States.CARGADO.name());
+			p.setState(States.LOADED.name());
 		} catch (Exception ex) {
+			LOGGER.error("An error occurred while processing the file, please check the contents of the loaded file!");
 			LOGGER.error(ex.getMessage(), ex);
 			p.setState(States.ERROR.name());
 			p.setError(ex.getMessage());
@@ -62,8 +63,7 @@ public abstract class ProcessorImpl<T extends BaseEntity<?>> implements IProcess
 			Instant stop = Instant.now();
 			p.setEndDate(Date.from(stop));
 			p = processRepository.save(p);
-			LOGGER.info(String.format("Records - Written [%d] - Elapsed Time [%d] ms",
-					Optional.ofNullable(p.getRecords()).orElse(0),ChronoUnit.MILLIS.between(start, stop))
+			LOGGER.info(String.format("Records - Written [%d] - Elapsed Time [%d] ms",Optional.ofNullable(p.getRecords()).orElse(0),ChronoUnit.MILLIS.between(start, stop))
 			);
 		}
 	}

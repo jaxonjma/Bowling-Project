@@ -2,8 +2,8 @@ package com.jaxon.bowling.enums;
 
 public enum States {
 	
-	CARGANDO,
-	CARGADO,
+	LOADING,
+	LOADED,
 	WARNING,
 	ERROR;
 }

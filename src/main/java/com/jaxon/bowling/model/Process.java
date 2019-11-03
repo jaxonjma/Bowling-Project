@@ -39,6 +39,9 @@ public class Process{
 	
 	@Column(name="ERROR")
 	private String error;
+	
+	@Column(name="COMPLETED_AT")
+	private Date completedAt;
 
 	public Date getStartDate() {
 		return startDate;
@@ -78,6 +81,14 @@ public class Process{
 
 	public void setError(String error) {
 		this.error = error;
+	}
+
+	public Date getCompletedAt() {
+		return completedAt;
+	}
+
+	public void setCompletedAt(Date completedAt) {
+		this.completedAt = completedAt;
 	}
 	
 }
