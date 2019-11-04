@@ -66,8 +66,35 @@ public class GameProcessorImpl extends ProcessorImpl<Game>{
 		return this.getResponse(games,records);
 	}
 	
-	private int getCurrentValue(Game g) {
-		return g.getResult()!=-1?g.getResult():0;
+
+	private Stream<Game> processSinglePlayer(List<String> records){
+		int attempt=1;
+		int frame=1;
+		int countByFrame=1;
+		List<Game> games= new ArrayList<>();
+		for (String r : records) {
+			String[] s = r.split(separator.equals("")?" ":separator);
+			this.validateFormat(s.length!=2, s);
+			Game game = new Game();
+			game.setPlayer(s[0]);
+			game.setResult(faul.equalsIgnoreCase(s[1])?-1:this.getResult(s[0],s[1]));
+			game.setFrame(frame);
+			
+			game.setAttempt(attempt);
+			if((game.getResult()==10 || countByFrame==2) && frame<10) {
+				attempt=1;
+				countByFrame=1;
+				frame++;
+			}else {
+				countByFrame++;
+			}
+			
+			games.add(game);
+			if(countByFrame!=1) {
+				attempt++;
+			}
+		}
+		return games.stream();
 	}
 	
 	private void validateFormat(boolean e,String[] s) {
@@ -87,33 +114,4 @@ public class GameProcessorImpl extends ProcessorImpl<Game>{
 		return games.stream().collect(Collectors.groupingBy(Game::getPlayer, Collectors.counting())).size();
 	}
 
-	private Stream<Game> processSinglePlayer(List<String> records){
-		int attempt=1;
-		int frame=1;
-		int preValue=0;
-		List<Game> games= new ArrayList<>();
-		for (String r : records) {
-			String[] s = r.split(separator.equals("")?" ":separator);
-			this.validateFormat(s.length!=2, s);
-			
-			Game game = new Game();
-			game.setPlayer(s[0]);
-			game.setResult(faul.equalsIgnoreCase(s[1])?-1:this.getResult(s[0],s[1]));
-			
-			if((game.getResult()==10 || preValue+this.getCurrentValue(game)==10) && frame<10) {
-				attempt=1;
-				int f=frame;
-				if(games.stream().anyMatch(g-> s[0].equals(g.getPlayer()) && f==g.getFrame())) {
-					frame++;
-				}
-			}
-			game.setFrame(frame);
-			game.setAttempt(attempt);
-			
-			games.add(game);
-			preValue=game.getResult();
-			attempt++;
-		}
-		return games.stream();
-	}
 }
