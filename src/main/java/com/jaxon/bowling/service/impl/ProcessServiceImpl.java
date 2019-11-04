@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jaxon.bowling.enums.States;
 import com.jaxon.bowling.model.Process;
+import com.jaxon.bowling.model.dto.ResponseDTO;
 import com.jaxon.bowling.repository.IProcessRepository;
 import com.jaxon.bowling.service.GameService;
 import com.jaxon.bowling.service.ProcessService;
@@ -28,11 +30,14 @@ public class ProcessServiceImpl implements ProcessService{
 		Process p=processRepository.findAllPendingProcesses().stream().findFirst().orElse(null);
 		if(p!=null) {
 			LOGGER.info(String.format("Working in process with start date %s and %s records", p.getStartDate(),p.getRecords()));
-			boolean complete = gameService.showGame(p.getId());
-			if(complete) {
-				p.setCompletedAt(new Date());
-				LOGGER.info("Completed at "+processRepository.save(p).getCompletedAt().toString());
+			ResponseDTO response = gameService.showGame(p.getId());
+			p.setCompletedAt(new Date());
+			if(response.getState().equals(States.LOADED)) {
+				LOGGER.info(String.format("Completed at %s",processRepository.save(p).getCompletedAt().toString()));
 				gameService.printResults(p.getId());
+			}else if(response.getState().equals(States.WARNING)) {
+				p.setError(response.getMessage());
+				LOGGER.info(String.format("Completed with warning at %s",processRepository.save(p).getCompletedAt().toString()));
 			}
 		}
 	}

@@ -9,18 +9,24 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jaxon.bowling.exception.BusinessException;
+import com.jaxon.bowling.enums.States;
 import com.jaxon.bowling.model.Game;
+import com.jaxon.bowling.model.dto.ResponseDTO;
 import com.jaxon.bowling.printer.Printer;
 import com.jaxon.bowling.repository.IGameRepository;
 import com.jaxon.bowling.service.GameService;
+import com.jaxon.bowling.util.GameUtil;
 
 @Service
 public class GameServiceImpl implements GameService{
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(GameServiceImpl.class);
+	
 	@Autowired
 	private IGameRepository gameRepository;
 	
@@ -33,13 +39,18 @@ public class GameServiceImpl implements GameService{
 	
 	@Override
 	@Transactional
-	public boolean showGame(Long idProcess) {
+	public ResponseDTO showGame(Long idProcess) {
 		List<Game> games= gameRepository.findGamesByProcess(idProcess);
-		//this.validateAttemptsByFrame(games);
-		this.validateTotalFrames(games);
+		try {
+			GameUtil.validateGames(games);
+		} catch (Exception ex) {
+			LOGGER.error("An error occurred while processing the file, please check the contents of the loaded file!");
+			LOGGER.error(ex.getMessage(), ex);
+			return new ResponseDTO(States.WARNING, ex.getMessage());
+		}
 		this.calculateTotalByFrame(games);
 		this.save(games);
-		return true;
+		return new ResponseDTO(States.LOADED,"");
 	}
 	
 	@Override
@@ -48,7 +59,6 @@ public class GameServiceImpl implements GameService{
 	}
 	
 	private void calculateTotalByFrame(List<Game> games) {
-		this.filterGames(games);
 		games.stream().forEach(g->{
 			if(g.getAttempt()>1) {
 				return;
@@ -115,42 +125,8 @@ public class GameServiceImpl implements GameService{
 		return gamesByPlayer.stream().filter(gbp-> frame == gbp.getFrame()).collect(Collectors.toList()).size()==1;
 	}
 	
-	private void validateAttemptsByFrame(List<Game> games) {
-		games.stream().forEach(g->{
-			int frame=g.getFrame();
-			String player=g.getPlayer();
-			
-			List<Game> auxGames=new ArrayList<>(games);
-			List<Game> filteredList = auxGames.stream().filter(i-> frame==i.getFrame() && player.equals(i.getPlayer())).collect(Collectors.toList());
-			if(frame<TOTAL_FRAMES) {
-				validateAttemptsAllowed(filteredList, 2, player);
-			}else if(frame==TOTAL_FRAMES) {
-				validateAttemptsAllowed(filteredList, 3, player);
-			}else {
-				throw new BusinessException("More frames than expected have been found!");
-			}
-		});
-	}
-	
-	//ajustar
-	private void validateTotalFrames(List<Game> games) {
-//		if(games.stream().filter(g-> TOTAL_FRAMES==g.getFrame()).count()!=2) {//CHANGE TO MORE PLAYERS
-//			throw new BusinessException("Less than 10 plays found in the uploaded file!");
-//		}
-	}
-	
-	private void validateAttemptsAllowed(List<Game> filteredList, int allowedAmount, String player) {
-		if(filteredList.size()>allowedAmount) {
-			throw new BusinessException(String.format("More attempts than expected for player %s found!",player));
-		}
-	}
-	
-	private void filterGames(List<Game> games) {
-//		List<Game> aux=new ArrayList<>(games);
-//		games.removeIf(g-> (0==g.getResult()||-1==g.getResult()) && aux.stream().anyMatch(a-> g.getFrame()==a.getFrame() && TOTAL_PINES==a.getResult()));
-	}
-	
 	private void save(List<Game> games) {
 		games.stream().forEach(g->gameRepository.save(g));
 	}
+	
 }

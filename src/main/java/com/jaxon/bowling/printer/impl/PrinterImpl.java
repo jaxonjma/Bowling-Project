@@ -1,14 +1,13 @@
 package com.jaxon.bowling.printer.impl;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import com.jaxon.bowling.model.Game;
 import com.jaxon.bowling.printer.Printer;
+import com.jaxon.bowling.util.GameUtil;
 
 @Component
 public class PrinterImpl implements Printer{
@@ -24,9 +23,11 @@ public class PrinterImpl implements Printer{
 	
 	@Override
 	public void printGames(List<Game> games) {
-		System.out.println();
-		this.printHeader();
-		Map<String,List<Game>> gamesByPlayers= this.sortedMapByNamePlayer(this.getGamesByPlayers(games));
+		if(!games.isEmpty()) {
+			System.out.println();
+			this.printHeader();
+		}
+		Map<String,List<Game>> gamesByPlayers= GameUtil.sortedMapByNamePlayer(GameUtil.getGamesByPlayers(games));
 		gamesByPlayers.forEach((k,v)->{
 			this.printPlayer(k);
 			this.printFalls(v);
@@ -51,7 +52,7 @@ public class PrinterImpl implements Printer{
 	private void printFalls(List<Game> gamesByPlayer) {
 		System.out.println();
 		System.out.printf(MAIN_COLUMN, "Pinfalls");
-		Map<Integer,List<Game>> gamesByFrame = gamesByPlayer.stream().collect(Collectors.groupingBy(Game::getFrame));
+		Map<Integer,List<Game>> gamesByFrame = GameUtil.getGamesByFrame(gamesByPlayer);
 		gamesByFrame.forEach((k,v)->{
 			if(v.size()==1) {
 				System.out.printf(TAB_SIZE, EMPTY_VALUE);
@@ -70,7 +71,7 @@ public class PrinterImpl implements Printer{
 	private void printScore(List<Game> gamesByPlayer) {
 		System.out.println();
 		System.out.printf(MAIN_COLUMN, "Score");
-		Map<Integer,List<Game>> gamesByFrame = gamesByPlayer.stream().collect(Collectors.groupingBy(Game::getFrame));
+		Map<Integer,List<Game>> gamesByFrame = GameUtil.getGamesByFrame(gamesByPlayer);
 		gamesByFrame.forEach((k,v)->{
 			System.out.printf(TAB_SIZE, v.get(0).getTotalFrame());
 			System.out.printf(TAB_SIZE, EMPTY_VALUE);
@@ -105,17 +106,5 @@ public class PrinterImpl implements Printer{
 		}else {
 			return String.valueOf(result);
 		}
-	}
-	
-	private Map<String,List<Game>> getGamesByPlayers(List<Game> games){
-		return games.stream()
-		.collect(Collectors.groupingBy(Game::getPlayer));
-	}
-
-	private Map<String,List<Game>> sortedMapByNamePlayer(Map<String,List<Game>> unsortMap){
-		return unsortMap.entrySet().stream()
-					    .sorted(Map.Entry.comparingByKey())
-					    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-					    (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 	}
 }
