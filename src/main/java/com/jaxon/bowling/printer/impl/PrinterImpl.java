@@ -16,6 +16,10 @@ public class PrinterImpl implements Printer{
 	private static final String STRIKE        ="X";
 	private static final String FAUL          ="F";
 	private static final String TEN_IN_COUPLE ="/";
+	private static final String MAIN_COLUMN   ="%-18s";
+	private static final String TAB_SIZE   	  ="%-6s";
+	private static final String EMPTY_VALUE	  ="";
+
 	private static final String[] FRAMES = new String[] {"1","2","3","4","5","6","7","8","9","10" };
 	
 	@Override
@@ -28,47 +32,48 @@ public class PrinterImpl implements Printer{
 			this.printFalls(v);
 			this.printScore(v);
 		});
+		System.out.println();
 	}
 	
 	private void printHeader() {
-		System.out.printf("%-18s", "Frame");
+		System.out.printf(MAIN_COLUMN, "Frame");
 		for (String s : FRAMES) {
-			 System.out.printf("%-6s", s);
-			 System.out.printf("%-6s", "");
+			 System.out.printf(TAB_SIZE, s);
+			 System.out.printf(TAB_SIZE, EMPTY_VALUE);
 		}
 	}
 	
 	private void printPlayer(String player) {
 		System.out.println();
-		System.out.printf("%-18s", player);
+		System.out.printf(MAIN_COLUMN, player);
 	}
 	
 	private void printFalls(List<Game> gamesByPlayer) {
 		System.out.println();
-		System.out.printf("%-18s", "Pinfalls");
+		System.out.printf(MAIN_COLUMN, "Pinfalls");
 		Map<Integer,List<Game>> gamesByFrame = gamesByPlayer.stream().collect(Collectors.groupingBy(Game::getFrame));
 		gamesByFrame.forEach((k,v)->{
 			if(v.size()==1) {
-				System.out.printf("%-6s", "");
-				System.out.printf("%-6s", this.transformSingleResult(v.get(0).getResult()));
+				System.out.printf(TAB_SIZE, EMPTY_VALUE);
+				System.out.printf(TAB_SIZE, this.transformSingleResult(v.get(0).getResult()));
 			}else if(v.size()==2) {
-				System.out.printf("%-6s", this.transform(v.get(0).getResult()));
-				System.out.printf("%-6s", this.transformCouple(v.get(0).getResult(),v.get(1).getResult()));
+				System.out.printf(TAB_SIZE, this.transform(v.get(0).getResult()));
+				System.out.printf(TAB_SIZE, this.transformCouple(v.get(0).getResult(),v.get(1).getResult()));
 			}else if(v.size()==3) {
-				System.out.printf("%-6s", this.transformSingleResult(v.get(0).getResult()));
-				System.out.printf("%-6s", this.transformCouple(v.get(0).getResult(),v.get(1).getResult()));
-				System.out.printf("%-6s", this.transformCouple(v.get(1).getResult(),v.get(2).getResult()));
+				System.out.printf(TAB_SIZE, this.transformSingleResult(v.get(0).getResult()));
+				System.out.printf(TAB_SIZE, this.transformCouple(v.get(0).getResult(),v.get(1).getResult()));
+				System.out.printf(TAB_SIZE, this.transformCouple(v.get(1).getResult(),v.get(2).getResult()));
 			}
 		});
 	}
 	
 	private void printScore(List<Game> gamesByPlayer) {
 		System.out.println();
-		System.out.printf("%-18s", "Score");
+		System.out.printf(MAIN_COLUMN, "Score");
 		Map<Integer,List<Game>> gamesByFrame = gamesByPlayer.stream().collect(Collectors.groupingBy(Game::getFrame));
 		gamesByFrame.forEach((k,v)->{
-			System.out.printf("%-6s", v.get(0).getTotalFrame());
-			System.out.printf("%-6s", "");
+			System.out.printf(TAB_SIZE, v.get(0).getTotalFrame());
+			System.out.printf(TAB_SIZE, EMPTY_VALUE);
 		});
 	}
 	

@@ -35,7 +35,7 @@ public class GameServiceImpl implements GameService{
 	@Transactional
 	public boolean showGame(Long idProcess) {
 		List<Game> games= gameRepository.findGamesByProcess(idProcess);
-		this.validateAttemptsByFrame(games);
+		//this.validateAttemptsByFrame(games);
 		this.validateTotalFrames(games);
 		this.calculateTotalByFrame(games);
 		this.save(games);
@@ -65,16 +65,13 @@ public class GameServiceImpl implements GameService{
 		int sumByFrame = this.sumFrame(gamesByPlayer, frame);
 		if(sumByFrame<TOTAL_PINES || frame==TOTAL_FRAMES) {
 			return sumByFrame+this.sumPreviousFrame(gamesByPlayer, frame);
-		}else if(sumByFrame==TOTAL_PINES) {
+		}else {
 			if(this.isStrike(gamesByPlayer, frame)) {
 				return sumByFrame+this.sumPreviousFrame(gamesByPlayer, frame)+this.sumTwoNextFrames(gamesByPlayer, frame);
 			}else {
 				return sumByFrame+this.sumPreviousFrame(gamesByPlayer, frame)+this.sumNextFrame(gamesByPlayer, frame);
 			}
-		}else {
-			throw new BusinessException(String.format("Frame with more than 10 points found for player %s frame %s", g.getPlayer(),g.getFrame()));
 		}
-		
 	}
 	
 	private int sumTwoNextFrames(List<Game> gamesByPlayer, int frame) {
