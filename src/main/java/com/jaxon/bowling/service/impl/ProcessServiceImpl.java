@@ -32,6 +32,7 @@ public class ProcessServiceImpl implements ProcessService{
 			if(complete) {
 				p.setCompletedAt(new Date());
 				LOGGER.info("Completed at "+processRepository.save(p).getCompletedAt().toString());
+				gameService.printResults(p.getId());
 			}
 		}
 	}

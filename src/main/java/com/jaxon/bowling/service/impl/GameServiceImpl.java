@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.jaxon.bowling.exception.BusinessException;
 import com.jaxon.bowling.model.Game;
+import com.jaxon.bowling.printer.Printer;
 import com.jaxon.bowling.repository.IGameRepository;
 import com.jaxon.bowling.service.GameService;
 
@@ -22,6 +23,9 @@ public class GameServiceImpl implements GameService{
 
 	@Autowired
 	private IGameRepository gameRepository;
+	
+	@Autowired
+	private Printer printer;
 	
 	private static final int TOTAL_FRAMES =10;
 	private static final int TOTAL_PINES  =10;
@@ -36,6 +40,11 @@ public class GameServiceImpl implements GameService{
 		this.calculateTotalByFrame(games);
 		this.save(games);
 		return true;
+	}
+	
+	@Override
+	public void printResults(Long idProcess) {
+		printer.printGames(gameRepository.findGamesByProcess(idProcess));
 	}
 	
 	private void calculateTotalByFrame(List<Game> games) {
