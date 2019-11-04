@@ -17,6 +17,9 @@ public class Game extends BaseEntity<Long> {
 	
 	@Column(name="FRAME")
 	private Integer frame;
+	
+	@Column(name="TOTAL_FRAME")
+	private Integer totalFrame;
 
 	public String getPlayer() {
 		return player;
@@ -48,6 +51,14 @@ public class Game extends BaseEntity<Long> {
 
 	public void setFrame(Integer frame) {
 		this.frame = frame;
+	}
+
+	public Integer getTotalFrame() {
+		return totalFrame;
+	}
+
+	public void setTotalFrame(Integer totalFrame) {
+		this.totalFrame = totalFrame;
 	}
 
 	@Override
