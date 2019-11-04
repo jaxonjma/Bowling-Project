@@ -31,7 +31,7 @@ public class ProcessServiceImpl implements ProcessService{
 			boolean complete = gameService.showGame(p.getId());
 			if(complete) {
 				p.setCompletedAt(new Date());
-				processRepository.save(p);
+				LOGGER.info("Completed at "+processRepository.save(p).getCompletedAt().toString());
 			}
 		}
 	}
