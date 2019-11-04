@@ -49,7 +49,7 @@ The solution is divided into two major processes:
 * ***Upload of files associated with a process:***
 Responsible for taking any plain text file (.txt) from a parameterizable folder and persisting in a database in the "GAME" table associated with a loading process in the "PROCESS" table.
 
-  This process starts when an item in the configured folder is placed.
+  This process starts when an item in the configured folder is placed and it is based on the use of strategies and readers which allows it to scale to more types of files.
 
   (When you upload an incorrectly formatted file you will get a message "The uploaded file is not a .txt")
 
