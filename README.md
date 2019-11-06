@@ -61,7 +61,7 @@ Responsible for taking the loading processes ordered from "START_DATE" (as long 
 
 **ABOUT THE CONFIG TO RUN**
 
-To execute the solution you must download the source code of this project, import it to the IDE of your choice (Designed on STS), adjust the parameters available in the "/bowling/src/main/resources/application.properties" to your liking, execute the application as "Spring Boot App" or just like "Java Application" and upload files with game results.
+To execute the solution you must download the source code of this project, import it to the IDE of your choice (Designed on STS), adjust the parameters available in the "/bowling/src/main/resources/application.properties" to your liking, execute the application as "Spring Boot App" or just like "Java Application" (The main class is /bowling/src/main/java/com/jaxon/bowling/BowlingApplication.java) and upload files with game results.
 
 The solution execution process is shown in the video "/bowling/Documentation_Folder/Bowling test.mp4" also available in this repository, as well as a set of test files used during development in "/bowling/Documentation_Folder/Files to test.zip "
 
