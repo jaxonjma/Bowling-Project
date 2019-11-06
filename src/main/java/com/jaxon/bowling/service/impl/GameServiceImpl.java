@@ -55,8 +55,7 @@ public class GameServiceImpl implements GameService{
 	
 	@Override
 	public void printResults(Long idProcess) {
-		ResponseDTO response = printer.printGames(gameRepository.findGamesByProcess(idProcess));
-		LOGGER.info(String.format("The game was printed with result: ", response.getState()));
+		printer.printGames(gameRepository.findGamesByProcess(idProcess));
 	}
 	
 	private void calculateTotalByFrame(List<Game> games) {

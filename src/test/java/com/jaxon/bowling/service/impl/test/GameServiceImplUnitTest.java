@@ -115,7 +115,6 @@ class GameServiceImplUnitTest {
 	void testOrderOfPrintResukts() {
 		List<Game> games = new ArrayList<>();
 		Mockito.when(gameRepository.findGamesByProcess(ID_PROCESO)).thenReturn(games);
-		Mockito.when(printer.printGames(games)).thenReturn(new ResponseDTO(States.LOADED, ""));
 		gameServiceImpl.printResults(ID_PROCESO);
 	}
 }

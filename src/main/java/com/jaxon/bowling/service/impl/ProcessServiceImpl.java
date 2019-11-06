@@ -26,23 +26,28 @@ public class ProcessServiceImpl implements ProcessService{
 	private GameService gameService;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessServiceImpl.class);
+	private Process process;
 	
 	@Override
 	@Transactional
 	public void completeProcess() {
-		Process p=processRepository.findAllPendingProcesses().stream().findFirst().orElse(null);
-		if(p!=null) {
-			LOGGER.info(String.format("Working in process with start date %s and %s records", p.getStartDate(),p.getRecords()));
-			ResponseDTO response = gameService.showGame(p.getId());
-			p.setCompletedAt(new Date());
+		process=processRepository.findAllPendingProcesses().stream().findFirst().orElse(null);
+		if(process!=null) {
+			LOGGER.info(String.format("Working in process with start date %s and %s records", process.getStartDate(),process.getRecords()));
+			ResponseDTO response = gameService.showGame(process.getId());
+			process.setCompletedAt(new Date());
 			if(response.getState().equals(States.LOADED)) {
-				LOGGER.info(String.format("Completed at %s",processRepository.save(p).getCompletedAt().toString()));
-				gameService.printResults(p.getId());
+				LOGGER.info(String.format("Completed at %s",processRepository.save(process).getCompletedAt().toString()));
+				gameService.printResults(process.getId());
 			}else if(response.getState().equals(States.WARNING)) {
-				p.setError(response.getMessage());
-				LOGGER.info(String.format("Completed with warning at %s",processRepository.save(p).getCompletedAt().toString()));
+				process.setError(response.getMessage());
+				LOGGER.info(String.format("Completed with warning at %s",processRepository.save(process).getCompletedAt().toString()));
 			}
 		}
+	}
+	
+	public Process getProcess() {
+		return process;
 	}
 
 }

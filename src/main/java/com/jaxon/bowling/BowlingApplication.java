@@ -31,11 +31,9 @@ public class BowlingApplication implements CommandLineRunner{
 	
     @Override
     public void run(String... args) throws Exception {
-        if (args.length > 0) {
-        	Timer t = new Timer();
-            t.scheduleAtFixedRate(mTask, 0, waitFor);
-            ws.processEvents();
-        }
+    	Timer t = new Timer();
+        t.scheduleAtFixedRate(mTask, 0, waitFor);
+        ws.processEvents();
         exit(0);
     }
 
