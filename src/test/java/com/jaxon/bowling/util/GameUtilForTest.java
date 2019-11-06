@@ -1,4 +1,4 @@
-package com.jaxon.bowling.util.test.unit;
+package com.jaxon.bowling.util;
 
 import java.util.Arrays;
 import java.util.List;
@@ -72,6 +72,28 @@ public final class GameUtilForTest {
 		Game g11 = getBaseGame(10,2,player,10);
 		Game g12 = getBaseGame(10,3,player,10);
 		return Arrays.asList(g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,g11,g12);
+	}
+	
+	public static List<Game> getBaseGamesFaulXhon() {
+		String player="Xhon";
+		Game g1  = getBaseGame(1, 1,player,-1);
+		Game g2  = getBaseGame(2, 1,player,-1);
+		Game g3  = getBaseGame(3, 1,player,-1);
+		Game g4  = getBaseGame(4, 1,player,-1);
+		Game g5  = getBaseGame(5, 1,player,-1);
+		Game g6  = getBaseGame(6, 1,player,-1);
+		Game g7  = getBaseGame(7, 1,player,-1);
+		Game g8  = getBaseGame(8, 1,player,-1);
+		Game g9  = getBaseGame(9, 1,player,-1);
+		Game g10 = getBaseGame(10,1,player,-1);
+		Game g11 = getBaseGame(10,2,player,-1);
+		Game g12 = getBaseGame(10,3,player,-1);
+		return Arrays.asList(g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,g11,g12);
+	}
+	
+	public static Game getOverRatedGame() {
+		String player="Jeff";
+		return getBaseGame(1, 1,player,11);
 	}
 	
 	private static Game getBaseGame(int frame, int attempt, String player, int result) {

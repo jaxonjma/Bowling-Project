@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.jaxon.bowling.service.WatchService;
 import com.jaxon.bowling.task.ShowProcessTask;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.jaxon.bowling"})
 public class BowlingApplication implements CommandLineRunner{
 	
 	@Autowired

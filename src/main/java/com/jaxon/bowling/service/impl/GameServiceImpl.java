@@ -55,7 +55,8 @@ public class GameServiceImpl implements GameService{
 	
 	@Override
 	public void printResults(Long idProcess) {
-		printer.printGames(gameRepository.findGamesByProcess(idProcess));
+		ResponseDTO response = printer.printGames(gameRepository.findGamesByProcess(idProcess));
+		LOGGER.info(String.format("The game was printed with result: ", response.getState()));
 	}
 	
 	private void calculateTotalByFrame(List<Game> games) {
@@ -98,14 +99,10 @@ public class GameServiceImpl implements GameService{
 	}
 	
 	private int sumNextFrame(List<Game> gamesByPlayer, int frame) {
-		if(frame<TOTAL_FRAMES) {
-			final int f = frame+1;
-			return gamesByPlayer.stream().filter(gbp-> 
-				   gbp.getFrame()==f && gbp.getAttempt()==1).mapToInt(VALIDATE_FAULT).sum();
-		}else {
-			return gamesByPlayer.stream().filter(gbp-> 
-			   gbp.getFrame()==frame && gbp.getAttempt()==2).mapToInt(VALIDATE_FAULT).sum();
-		}
+		final int f = frame+1;
+		return gamesByPlayer.stream().filter(gbp-> 
+			   gbp.getFrame()==f && gbp.getAttempt()==1).mapToInt(VALIDATE_FAULT).sum();
+		
 	}
 	
 	private int sumPreviousFrame(List<Game> gamesByPlayer, int frame) {

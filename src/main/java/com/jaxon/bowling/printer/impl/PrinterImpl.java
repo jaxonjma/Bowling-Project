@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.jaxon.bowling.enums.States;
 import com.jaxon.bowling.model.Game;
+import com.jaxon.bowling.model.dto.ResponseDTO;
 import com.jaxon.bowling.printer.Printer;
 import com.jaxon.bowling.util.GameUtil;
 
@@ -22,7 +24,7 @@ public class PrinterImpl implements Printer{
 	private static final String[] FRAMES = new String[] {"1","2","3","4","5","6","7","8","9","10" };
 	
 	@Override
-	public void printGames(List<Game> games) {
+	public ResponseDTO printGames(List<Game> games) {
 		if(!games.isEmpty()) {
 			System.out.println();
 			this.printHeader();
@@ -34,6 +36,8 @@ public class PrinterImpl implements Printer{
 			this.printScore(v);
 		});
 		System.out.println();
+		
+		return new ResponseDTO(States.LOADED, "");
 	}
 	
 	private void printHeader() {
