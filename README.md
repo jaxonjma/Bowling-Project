@@ -22,7 +22,8 @@ https://www.youtube.com/watch?v=aBe71sD8o8c
 * H2 Database (Oracle based)
 * JPA
 * Hibernate
-* JUnit
+* JUnit 5
+* Mockito
 * Java Timer
 * Gradle
 
@@ -82,6 +83,10 @@ The entities of the solution are the following:
 
   Its relationship with the entity "PROCESS" is many to one.
 
+...
 
+**ABOUT TESTING**
+
+The tests designed in this project seek to reflect knowledge in different forms of testing, the fully functional tests have been left on different layers of the application and even validations of the results in the console.
 
 
