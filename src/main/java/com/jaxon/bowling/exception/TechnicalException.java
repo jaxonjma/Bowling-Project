@@ -1,6 +1,6 @@
 package com.jaxon.bowling.exception;
 
-public class TechnicalException extends SpiritException {
+public class TechnicalException extends GeneralException {
 	
 	private static final long serialVersionUID = -8400320598772024740L;
 	

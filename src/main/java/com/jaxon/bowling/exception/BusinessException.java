@@ -1,6 +1,6 @@
 package com.jaxon.bowling.exception;
 
-public class BusinessException extends SpiritException {
+public class BusinessException extends GeneralException {
 	
 	private static final long serialVersionUID = 2943921281038327694L;
 	

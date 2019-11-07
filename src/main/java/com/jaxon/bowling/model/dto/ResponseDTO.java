@@ -7,6 +7,8 @@ public class ResponseDTO {
 	private String message;
 	private States state;
 	
+	public ResponseDTO() {}
+	
 	public ResponseDTO(States state, String message) {
 		this.state=state;
 		this.message=message;

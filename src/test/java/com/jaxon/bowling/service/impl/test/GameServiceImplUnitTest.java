@@ -116,5 +116,6 @@ class GameServiceImplUnitTest {
 		List<Game> games = new ArrayList<>();
 		Mockito.when(gameRepository.findGamesByProcess(ID_PROCESO)).thenReturn(games);
 		gameServiceImpl.printResults(ID_PROCESO);
+		Mockito.verify(printer).printGames(games);
 	}
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -71,7 +72,11 @@ public class ProcessServiceImplUnitTest {
 		Mockito.when(processRepository.findAllPendingProcesses()).thenReturn(Arrays.asList(process));
 		process.setCompletedAt(new Date());
 		Mockito.when(processRepository.save(Mockito.any(Process.class))).thenReturn(process);
-		Mockito.when(gameService.showGame(1L)).thenReturn(new ResponseDTO(States.WARNING, "A controlled exception"));
+		
+		ResponseDTO responseDTO = new ResponseDTO();
+					responseDTO.setMessage("A controlled exception!");
+					responseDTO.setState(States.WARNING);
+		Mockito.when(gameService.showGame(1L)).thenReturn(responseDTO);
 		
 		processServiceImpl.completeProcess();
 		Process response = processServiceImpl.getProcess();
@@ -80,6 +85,18 @@ public class ProcessServiceImplUnitTest {
 				()-> assertEquals(response.getState(),null),
 				()-> assertFalse(response.getCompletedAt()==null)
 				);
+	}
+	
+	@Test
+	@DisplayName("Testing process null: successful")
+	void testProcessNulo() {
+		Mockito.when(processRepository.findAllPendingProcesses()).thenReturn(new ArrayList<>());
+		
+		processServiceImpl.completeProcess();
+		Process response = processServiceImpl.getProcess();
+		
+		assertAll("Validating process",
+				()-> assertEquals(response,null));
 	}
 	
 }
