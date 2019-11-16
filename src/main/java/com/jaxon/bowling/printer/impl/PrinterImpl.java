@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.jaxon.bowling.model.Game;
+import com.jaxon.bowling.model.dto.GameDTO;
 import com.jaxon.bowling.printer.Printer;
 import com.jaxon.bowling.util.GameUtil;
 
@@ -22,12 +22,12 @@ public class PrinterImpl implements Printer{
 	private static final String[] FRAMES = new String[] {"1","2","3","4","5","6","7","8","9","10" };
 	
 	@Override
-	public void printGames(List<Game> games) {
+	public void printGames(List<GameDTO> games) {
 		if(!games.isEmpty()) {
 			System.out.println();
 			this.printHeader();
 		}
-		Map<String,List<Game>> gamesByPlayers= GameUtil.sortedMapByNamePlayer(GameUtil.getGamesByPlayers(games));
+		Map<String,List<GameDTO>> gamesByPlayers= GameUtil.sortedMapByNamePlayer(GameUtil.getGamesByPlayers(games));
 		gamesByPlayers.forEach((k,v)->{
 			this.printPlayer(k);
 			this.printFalls(v);
@@ -49,10 +49,10 @@ public class PrinterImpl implements Printer{
 		System.out.printf(MAIN_COLUMN, player);
 	}
 	
-	private void printFalls(List<Game> gamesByPlayer) {
+	private void printFalls(List<GameDTO> gamesByPlayer) {
 		System.out.println();
 		System.out.printf(MAIN_COLUMN, "Pinfalls");
-		Map<Integer,List<Game>> gamesByFrame = GameUtil.getGamesByFrame(gamesByPlayer);
+		Map<Integer,List<GameDTO>> gamesByFrame = GameUtil.getGamesByFrame(gamesByPlayer);
 		gamesByFrame.forEach((k,v)->{
 			if(v.size()==1) {
 				System.out.printf(TAB_SIZE, EMPTY_VALUE);
@@ -68,10 +68,10 @@ public class PrinterImpl implements Printer{
 		});
 	}
 	
-	private void printScore(List<Game> gamesByPlayer) {
+	private void printScore(List<GameDTO> gamesByPlayer) {
 		System.out.println();
 		System.out.printf(MAIN_COLUMN, "Score");
-		Map<Integer,List<Game>> gamesByFrame = GameUtil.getGamesByFrame(gamesByPlayer);
+		Map<Integer,List<GameDTO>> gamesByFrame = GameUtil.getGamesByFrame(gamesByPlayer);
 		gamesByFrame.forEach((k,v)->{
 			System.out.printf(TAB_SIZE, v.get(0).getTotalFrame());
 			System.out.printf(TAB_SIZE, EMPTY_VALUE);

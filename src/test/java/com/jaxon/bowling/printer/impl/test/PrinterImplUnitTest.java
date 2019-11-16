@@ -16,7 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.jaxon.bowling.model.Game;
+import com.jaxon.bowling.model.dto.GameDTO;
 import com.jaxon.bowling.printer.impl.PrinterImpl;
 import com.jaxon.bowling.util.GameUtilForTest;
 
@@ -37,7 +37,7 @@ public class PrinterImplUnitTest {
 	@Test
 	@DisplayName("Runing four games in printer")
 	void testPrinter() throws InterruptedException {
-		List<Game> games = new ArrayList<>();
+		List<GameDTO> games = new ArrayList<>();
 		   games.addAll(GameUtilForTest.getBaseGamesJeff());
 		   games.addAll(GameUtilForTest.getBaseGamesJohn());
 		   games.addAll(GameUtilForTest.getBaseGamesPerfectHomer());

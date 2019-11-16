@@ -20,9 +20,6 @@ public class WorkerImpl implements Worker{
 	@Autowired
 	private IStrategyFactory factory;
 	
-//	@Resource
-//	private ExecutorService executor;
-	
 	@Override
 	public void work(Path path) {
 		execute(path);
@@ -32,7 +29,6 @@ public class WorkerImpl implements Worker{
 		try {
 			String name = path.toFile().getName();
 			String filename = path.toFile().getAbsolutePath();
-			LOGGER.info(String.format("Working On File [%s]", filename));
 			IProcessorStrategy strategy = factory.getStrategy(name);
 			if (strategy != null) {
 				strategy.execute(filename);

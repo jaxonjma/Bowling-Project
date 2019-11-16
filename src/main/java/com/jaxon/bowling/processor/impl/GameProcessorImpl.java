@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.jaxon.bowling.exception.BusinessException;
-import com.jaxon.bowling.model.Game;
+import com.jaxon.bowling.model.dto.GameDTO;
 import com.jaxon.bowling.reader.FileReader;
 
 @Component
-public class GameProcessorImpl extends ProcessorImpl<Game>{
+public class GameProcessorImpl{
 	
 	@Value("${file.processor.separator}")
 	private String separator;
@@ -22,30 +22,21 @@ public class GameProcessorImpl extends ProcessorImpl<Game>{
 	@Value("${file.processor.faul}")
 	private String faul;
 	
-	@Override
-	protected Stream<Game> read(Class<Game> clazz, String filename, Charset charset) {
+	public List<GameDTO> read(Class<GameDTO> clazz, String filename, Charset charset) {
 		return transform(FileReader.read(filename, charset));
 	}
 	
-	private Stream<Game> getResponse(List<Game> games,List<String> records){
-		if(getNumberOfPlayers(games)!=1) {
-			return games.stream();
-		}else {
-			return this.processSinglePlayer(records);
-		}
-	}
-	
-	private Stream<Game> transform(List<String> records) {
+	private List<GameDTO> transform(List<String> records) {
 		int attempt=1;
 		int frame=1;
-		List<Game> games= new ArrayList<>();
+		List<GameDTO> games= new ArrayList<>();
 		String currentPlayer="";
 		for (String r : records) {
 			String[] s = r.split(separator.equals("")?" ":separator);
 			this.validateFormat(s.length!=2, s);
 			if(games.isEmpty()) {currentPlayer=s[0];}
 			
-			Game game = new Game();
+			GameDTO game = new GameDTO();
 			game.setPlayer(s[0]);
 			game.setResult(faul.equalsIgnoreCase(s[1])?-1:this.getResult(s[0],s[1]));
 			
@@ -67,15 +58,24 @@ public class GameProcessorImpl extends ProcessorImpl<Game>{
 	}
 	
 
-	private Stream<Game> processSinglePlayer(List<String> records){
+	private List<GameDTO> getResponse(List<GameDTO> games,List<String> records){
+		if(getNumberOfPlayers(games)!=1) {
+			return games.stream().collect(Collectors.toList());
+		}else {
+			return this.processSinglePlayer(records).collect(Collectors.toList());
+		}
+	}
+	
+
+	private Stream<GameDTO> processSinglePlayer(List<String> records){
 		int attempt=1;
 		int frame=1;
 		int countByFrame=1;
-		List<Game> games= new ArrayList<>();
+		List<GameDTO> games= new ArrayList<>();
 		for (String r : records) {
 			String[] s = r.split(separator.equals("")?" ":separator);
 			this.validateFormat(s.length!=2, s);
-			Game game = new Game();
+			GameDTO game = new GameDTO();
 			game.setPlayer(s[0]);
 			game.setResult(faul.equalsIgnoreCase(s[1])?-1:this.getResult(s[0],s[1]));
 			game.setFrame(frame);
@@ -110,8 +110,8 @@ public class GameProcessorImpl extends ProcessorImpl<Game>{
 		}
 	}
 
-	private int getNumberOfPlayers(List<Game> games) {
-		return games.stream().collect(Collectors.groupingBy(Game::getPlayer, Collectors.counting())).size();
+	private int getNumberOfPlayers(List<GameDTO> games) {
+		return games.stream().collect(Collectors.groupingBy(GameDTO::getPlayer, Collectors.counting())).size();
 	}
 
 }
