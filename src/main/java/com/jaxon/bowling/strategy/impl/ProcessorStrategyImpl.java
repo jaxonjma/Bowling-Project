@@ -22,7 +22,7 @@ public abstract class ProcessorStrategyImpl implements IProcessorStrategy {
 		if (validate(Paths.get(filename).toFile().getName())) {
 			process(filename);
 		} else {
-			LOGGER.info("The uploaded file is not a .txt");
+			LOGGER.warn("The uploaded file is not a .txt");
 		}
 	}
 	

@@ -33,7 +33,7 @@ public class WorkerImpl implements Worker{
 			if (strategy != null) {
 				strategy.execute(filename);
 			} else {
-				LOGGER.info(String.format("No existe una estrategia para [%s]", name));
+				LOGGER.warn(String.format("No existe una estrategia para [%s]", name));
 			}
 		} catch (Exception ex) {
 			LOGGER.error(ex.getMessage(), ex);

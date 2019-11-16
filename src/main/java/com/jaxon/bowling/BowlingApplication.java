@@ -5,6 +5,8 @@ import static java.lang.System.exit;
 import java.nio.file.Paths;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
@@ -21,6 +23,7 @@ public class BowlingApplication implements CommandLineRunner{
 
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
+		Logger.getRootLogger().setLevel(Level.WARN);
 		SpringApplication app = new SpringApplication(BowlingApplication.class);
 		app.setBannerMode(Banner.Mode.OFF);
 		app.setLogStartupInfo(Boolean.FALSE);
