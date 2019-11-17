@@ -3,6 +3,7 @@ package com.jaxon.bowling.processor.impl;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,7 +23,7 @@ public class GameProcessorImpl{
 	@Value("${file.processor.faul}")
 	private String faul;
 	
-	public List<GameDTO> read(Class<GameDTO> clazz, String filename, Charset charset) {
+	public List<GameDTO> read(String filename, Charset charset) {
 		return transform(FileReader.read(filename, charset));
 	}
 	
@@ -32,13 +33,13 @@ public class GameProcessorImpl{
 		List<GameDTO> games= new ArrayList<>();
 		String currentPlayer="";
 		for (String r : records) {
-			String[] s = r.split(separator.equals("")?" ":separator);
+			String[] s = r.split(Optional.ofNullable(separator).orElse(" ").equals("")?" ":Optional.ofNullable(separator).orElse(" "));
 			this.validateFormat(s.length!=2, s);
 			if(games.isEmpty()) {currentPlayer=s[0];}
 			
 			GameDTO game = new GameDTO();
 			game.setPlayer(s[0]);
-			game.setResult(faul.equalsIgnoreCase(s[1])?-1:this.getResult(s[0],s[1]));
+			game.setResult(Optional.ofNullable(faul).orElse("F").equalsIgnoreCase(s[1])?-1:this.getResult(s[0],s[1]));
 			
 			if(!currentPlayer.equals(s[0])) {
 				currentPlayer=s[0];
@@ -73,11 +74,11 @@ public class GameProcessorImpl{
 		int countByFrame=1;
 		List<GameDTO> games= new ArrayList<>();
 		for (String r : records) {
-			String[] s = r.split(separator.equals("")?" ":separator);
+			String[] s = r.split(Optional.ofNullable(separator).orElse(" ").equals("")?" ":Optional.ofNullable(separator).orElse(" "));
 			this.validateFormat(s.length!=2, s);
 			GameDTO game = new GameDTO();
 			game.setPlayer(s[0]);
-			game.setResult(faul.equalsIgnoreCase(s[1])?-1:this.getResult(s[0],s[1]));
+			game.setResult(Optional.ofNullable(faul).orElse("F").equalsIgnoreCase(s[1])?-1:this.getResult(s[0],s[1]));
 			game.setFrame(frame);
 			
 			game.setAttempt(attempt);

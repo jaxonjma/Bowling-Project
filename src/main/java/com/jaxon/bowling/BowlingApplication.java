@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
@@ -18,6 +19,8 @@ import com.jaxon.bowling.worker.impl.WorkerImpl;
 @SpringBootApplication(scanBasePackages = {"com.jaxon.bowling"})
 public class BowlingApplication implements CommandLineRunner{
 	
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(BowlingApplication.class);
+			
 	@Autowired
 	private WorkerImpl worker;
 
@@ -32,8 +35,12 @@ public class BowlingApplication implements CommandLineRunner{
 	
     @Override
     public void run(String... args) throws Exception {
-    	worker.work(Paths.get(args[0]));
-        exit(0);
+    	if(args==null || args.length==0) {
+    		LOGGER.warn("A file argument was not found, you must use the structure: \"java -jar path/to/jar path/to/yourFile.txt\" to run the application");
+    	}else {
+    		worker.work(Paths.get(String.join(" ",args)));
+    	}
+    	exit(0);
     }
 
 }

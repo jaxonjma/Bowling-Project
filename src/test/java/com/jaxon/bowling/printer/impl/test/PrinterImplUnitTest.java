@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +45,9 @@ public class PrinterImplUnitTest {
 		   
 		System.setOut(new PrintStream(outContent));
 		printerImpl.printGames(games);
-		TimeUnit.SECONDS.sleep(5);
+		while(getFullPrint().trim().isEmpty()) {
+			getFullPrint();
+		}
 		assertEquals(getFullPrint().trim(), outContent.toString().trim());
 	}
 	

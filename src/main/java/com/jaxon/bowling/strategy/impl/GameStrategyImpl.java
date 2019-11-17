@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.jaxon.bowling.model.dto.GameDTO;
 import com.jaxon.bowling.processor.impl.GameProcessorImpl;
 import com.jaxon.bowling.service.GameService;
 
@@ -20,7 +19,7 @@ public class GameStrategyImpl extends ProcessorStrategyImpl{
 	
 	@Override
 	protected void process(String filename) {
-		gameService.printResults(gameProcessorImpl.read(GameDTO.class, filename, StandardCharsets.UTF_8));
+		gameService.printResults(gameProcessorImpl.read(filename, StandardCharsets.UTF_8));
 	}
 
 }
