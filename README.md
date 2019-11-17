@@ -33,4 +33,4 @@ The final packaging of the application is a .Jar file.
 
 The application receives a parameter with the path to a file with the result of a bowling game and prints them in the requested format.
 
-To achieve the above, just run the .jar generated from the command console by doing: "java -jar path/to/jar path/to/scores.txt"
+To achieve the above, just run the .jar generated (Available in Documentation_Folder/bowling.jar) from the command console by doing: "java -jar path/to/jar path/to/scores.txt"
